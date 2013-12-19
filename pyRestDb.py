@@ -48,7 +48,7 @@ def set_value(variable=None, value=None):
 
 def return_data(data, pjson=False):
 	if pjson:
-		return json.dumps(data, sort_keys = False, indent = 2, separators=(',', ': '))
+		return json.dumps(data, sort_keys = True, indent = 2, separators=(',', ': '))
 	else:
 		return json.dumps(data)
 
