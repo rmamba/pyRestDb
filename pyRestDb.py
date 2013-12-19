@@ -30,7 +30,7 @@ def show_value(variable=None):
 	if 'pjson' in request.args:
 		pjson = True
 	if variable in data:
-		return return_data(val, pjson)
+		return return_data(data[variable], pjson)
 	else:
 		return return_data({"response": "EMPTY"}, pjson)
 
