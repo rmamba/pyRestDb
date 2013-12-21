@@ -68,7 +68,7 @@ def admin(password=None):
 	if 'pjson' in request.args:
 		pjson = True
 	if _admin != password:
-		time.sleep(1)
+		#time.sleep(.1)
 		return return_json({"error": "Wrong password!"}, pjson)
 	return return_json({ "public": data, "secret": secret }, pjson)
 
@@ -96,7 +96,7 @@ def admin_delete(password=None, variable=None):
 	return return_json({"response": "EMPTY"}, pjson)
 
 @app.route('/admin/purge/<password>')
-def admin_delete(password=None):
+def admin_purge(password=None):
 	pjson = False
 	_secret = None
 	if 'pjson' in request.args:
@@ -108,8 +108,8 @@ def admin_delete(password=None):
 		return return_json({"error": "Wrong password!"}, pjson)
 	
 	if _secret == None:
-		data = { }
-		secret = { }
+		data.clear()
+		secret.clear()
 		return return_json({"response": "OK"}, pjson)
 	else:
 		if _secret in secret:
