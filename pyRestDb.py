@@ -56,12 +56,12 @@ def set_value_post(variable=None):
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _secret == None:
-		data[variable] = request.json
+		data[variable] = json.loads(request.data)
 		return return_json({"response": "OK"}, pjson)
 	else:
 		if not _secret in secret:
 			secret[_secret] = { }
-		secret[_secret][variable] = request.json
+		secret[_secret][variable] = json.loads(request.data)
 		return return_json({"response": "OK"}, pjson)
 
 @app.route('/<variable>/<value>')
@@ -142,6 +142,14 @@ def return_json(data, pjson=True):
 		return flask.jsonify(**data)
 	else:
 		return flask.Response(response=json.dumps(data), status=200, mimetype='application/json')
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return flask.jsonify(error=404, text=e), 404
+   
+@app.errorhandler(500)
+def internal_error(e):
+    return flask.jsonify(error=500, text=e), 500
 
 if __name__ == '__main__':
 	_host = '0.0.0.0'
