@@ -23,7 +23,7 @@ _admin = 'password'
 def list_variable():
 	#data['args'] = request.args
 	pjson = True
-	if 'pjson' in request.args:
+	if 'json' in request.args:
 		pjson = False
 	return return_json(data, pjson)
 
@@ -32,7 +32,7 @@ def show_value(variable=None):
 	#data['args'] = request.args
 	pjson = True
 	_secret = None
-	if 'pjson' in request.args:
+	if 'json' in request.args:
 		pjson = False
 	if 'secret' in request.args:
 		_secret = request.args['secret']
@@ -52,6 +52,7 @@ def set_value_post(variable=None):
 	if request.method != 'POST':
 		return return_json({"error": "GET is not supported for this command"}, pjson)
 	
+	pjson = True
 	_secret = None
 	if 'secret' in request.args:
 		_secret = request.args['secret']
@@ -69,7 +70,7 @@ def set_value(variable=None, value=None):
 	#data['args'] = request.args
 	pjson = True
 	_secret = None
-	if 'pjson' in request.args:
+	if 'json' in request.args:
 		pjson = False
 	if 'secret' in request.args:
 		_secret = request.args['secret']
@@ -85,7 +86,7 @@ def set_value(variable=None, value=None):
 @app.route('/admin/<password>')
 def admin(password=None):
 	pjson = True
-	if 'pjson' in request.args:
+	if 'json' in request.args:
 		pjson = False
 	if _admin != password:
 		#time.sleep(.1)
@@ -96,7 +97,7 @@ def admin(password=None):
 def admin_delete(password=None, variable=None):
 	pjson = True
 	_secret = None
-	if 'pjson' in request.args:
+	if 'json' in request.args:
 		pjson = False
 	if 'secret' in request.args:
 		_secret = request.args['secret']
