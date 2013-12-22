@@ -11,6 +11,7 @@ import sys
 import asyncore
 import json
 
+import flask
 from flask import Flask
 from flask import request
 app = Flask(__name__)
@@ -21,18 +22,18 @@ _admin = 'password'
 @app.route('/')
 def list_variable():
 	#data['args'] = request.args
-	pjson = False
+	pjson = True
 	if 'pjson' in request.args:
-		pjson = True
+		pjson = False
 	return return_json(data, pjson)
 
 @app.route('/<variable>')
 def show_value(variable=None):
 	#data['args'] = request.args
-	pjson = False
+	pjson = True
 	_secret = None
 	if 'pjson' in request.args:
-		pjson = True
+		pjson = False
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _secret == None:
@@ -66,10 +67,10 @@ def set_value_post(variable=None):
 @app.route('/<variable>/<value>')
 def set_value(variable=None, value=None):
 	#data['args'] = request.args
-	pjson = False
+	pjson = True
 	_secret = None
 	if 'pjson' in request.args:
-		pjson = True
+		pjson = False
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _secret == None:
@@ -83,9 +84,9 @@ def set_value(variable=None, value=None):
 
 @app.route('/admin/<password>')
 def admin(password=None):
-	pjson = False
+	pjson = True
 	if 'pjson' in request.args:
-		pjson = True
+		pjson = False
 	if _admin != password:
 		#time.sleep(.1)
 		return return_json({"error": "Wrong password!"}, pjson)
@@ -93,10 +94,10 @@ def admin(password=None):
 
 @app.route('/admin/delete/<password>/<variabla>')
 def admin_delete(password=None, variable=None):
-	pjson = False
+	pjson = True
 	_secret = None
 	if 'pjson' in request.args:
-		pjson = True
+		pjson = False
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _admin != password:
@@ -116,10 +117,10 @@ def admin_delete(password=None, variable=None):
 
 @app.route('/admin/purge/<password>')
 def admin_purge(password=None):
-	pjson = False
+	pjson = True
 	_secret = None
-	if 'pjson' in request.args:
-		pjson = True
+	if 'json' in request.args:
+		pjson = False
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _admin != password:
@@ -136,11 +137,11 @@ def admin_purge(password=None):
 			return return_json({"response": "OK"}, pjson)
 	return return_json({"response": "EMPTY"}, pjson)
 
-def return_json(data, pjson=False):
+def return_json(data, pjson=True):
 	if pjson:
-		return flask.Response(response=json.dumps(data, sort_keys = True, indent = 2, separators=(',', ': ')), status=200, mimetype='application/json')
+		return flask.jsonify(**data)
 	else:
-		return jsonify(**data)
+		return flask.Response(response=json.dumps(data), status=200, mimetype='application/json')
 
 if __name__ == '__main__':
 	_host = '0.0.0.0'
