@@ -44,6 +44,25 @@ def show_value(variable=None):
 				return return_json(secret[_secret][variable], pjson)
 	return return_json({"response": "EMPTY"}, pjson)
 
+@app.route('/post/<variable>', methods=['POST'])
+def set_value_post(variable=None):
+	#data['args'] = request.args
+	
+	if request.method != 'POST':
+		return return_json({"error": "GET is not supported for this command"}, pjson)
+	
+	_secret = None
+	if 'secret' in request.args:
+		_secret = request.args['secret']
+	if _secret == None:
+		data[variable] = request.json
+		return return_json({"response": "OK"}, pjson)
+	else:
+		if not _secret in secret:
+			secret[_secret] = { }
+		secret[_secret][variable] = request.json
+		return return_json({"response": "OK"}, pjson)
+
 @app.route('/<variable>/<value>')
 def set_value(variable=None, value=None):
 	#data['args'] = request.args
@@ -58,7 +77,7 @@ def set_value(variable=None, value=None):
 		return return_json({"response": "OK"}, pjson)
 	else:
 		if not _secret in secret:
-			secret[_secret] = {}
+			secret[_secret] = { }
 		secret[_secret][variable] = json.loads(value)
 		return return_json({"response": "OK"}, pjson)
 
@@ -119,9 +138,9 @@ def admin_purge(password=None):
 
 def return_json(data, pjson=False):
 	if pjson:
-		return json.dumps(data, sort_keys = True, indent = 2, separators=(',', ': '))
+		return flask.Response(response=json.dumps(data, sort_keys = True, indent = 2, separators=(',', ': ')), status=200, mimetype='application/json')
 	else:
-		return json.dumps(data)
+		return jsonify(**data)
 
 if __name__ == '__main__':
 	_host = '0.0.0.0'
