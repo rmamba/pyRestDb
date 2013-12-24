@@ -138,11 +138,11 @@ def admin_purge(password=None):
 			return return_json({"response": "OK"}, pjson)
 	return return_json({"response": "EMPTY"}, pjson)
 
-def return_json(data, pjson=True):
+def return_json(data, pjson, sortkeys=True):
 	if pjson:
-		return flask.jsonify(**data)
+		return flask.Response(response=json.dumps(data, sort_keys=sortkeys, indent=4, separators=(',', ': ')), status=200, mimetype='application/json')
 	else:
-		return flask.Response(response=json.dumps(data), status=200, mimetype='application/json')
+		return flask.Response(response=json.dumps(data, sort_keys=sortkeys), status=200, mimetype='application/json')
 
 @app.errorhandler(404)
 def page_not_found(e):
