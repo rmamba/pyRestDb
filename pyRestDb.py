@@ -26,7 +26,7 @@ def list_variable():
 		pjson = True
 	return return_json(data, pjson)
 
-@app.route('/<variable>')
+@app.route('/<path:variable>')
 def show_value(variable=None):
 	pjson = False
 	_secret = None
@@ -35,12 +35,28 @@ def show_value(variable=None):
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _secret == None:
-		if variable in data:
-			return return_json(data[variable], pjson)
+		val = data
+		path = variable.split('/')
+		for p in path:
+			if p in val:
+				val = val[p]
+			else:
+				val = None
+				break
+		if val!=None:
+			return return_json(val, pjson)
 	else:
 		if _secret in secret:
-			if variable in secret[_secret]:
-				return return_json(secret[_secret][variable], pjson)
+			val = secret[_secret]
+			path = variable.split('/')
+			for p in path:
+				if p in val:
+					val = val[p]
+				else:
+					val = None
+					break
+			if val!=None:
+				return return_json(val, pjson)
 	return return_json({"response": "EMPTY"}, pjson)
 
 @app.route('/post/<variable>', methods=['POST'])
@@ -58,7 +74,7 @@ def set_value_post(variable=None):
 		secret[_secret][variable] = json.loads(request.data)
 	return return_json({"response": "OK"})
 
-@app.route('/<variable>/<value>')
+@app.route('/set/<variable>/<value>')
 def set_value(variable=None, value=None):
 	pjson = False
 	_secret = None
