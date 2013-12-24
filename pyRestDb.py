@@ -21,19 +21,17 @@ _admin = 'password'
 
 @app.route('/')
 def list_variable():
-	#data['args'] = request.args
-	pjson = True
-	if 'json' in request.args:
-		pjson = False
+	pjson = False
+	if 'pjson' in request.args:
+		pjson = True
 	return return_json(data, pjson)
 
 @app.route('/<variable>')
 def show_value(variable=None):
-	#data['args'] = request.args
-	pjson = True
+	pjson = False
 	_secret = None
-	if 'json' in request.args:
-		pjson = False
+	if 'pjson' in request.args:
+		pjson = True
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _secret == None:
@@ -47,31 +45,25 @@ def show_value(variable=None):
 
 @app.route('/post/<variable>', methods=['POST'])
 def set_value_post(variable=None):
-	#data['args'] = request.args
-	
 	if request.method != 'POST':
 		return return_json({"error": "GET is not supported for this command"}, pjson)
-	
-	pjson = True
 	_secret = None
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _secret == None:
 		data[variable] = json.loads(request.data)
-		return return_json({"response": "OK"}, pjson)
 	else:
 		if not _secret in secret:
 			secret[_secret] = { }
 		secret[_secret][variable] = json.loads(request.data)
-		return return_json({"response": "OK"}, pjson)
+	return return_json({"response": "OK"})
 
 @app.route('/<variable>/<value>')
 def set_value(variable=None, value=None):
-	#data['args'] = request.args
-	pjson = True
+	pjson = False
 	_secret = None
-	if 'json' in request.args:
-		pjson = False
+	if 'pjson' in request.args:
+		pjson = True
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _secret == None:
@@ -85,9 +77,9 @@ def set_value(variable=None, value=None):
 
 @app.route('/admin/<password>')
 def admin(password=None):
-	pjson = True
-	if 'json' in request.args:
-		pjson = False
+	pjson = False
+	if 'pjson' in request.args:
+		pjson = True
 	if _admin != password:
 		#time.sleep(.1)
 		return return_json({"error": "Wrong password!"}, pjson)
@@ -95,10 +87,10 @@ def admin(password=None):
 
 @app.route('/admin/delete/<password>/<variabla>')
 def admin_delete(password=None, variable=None):
-	pjson = True
+	pjson = False
 	_secret = None
-	if 'json' in request.args:
-		pjson = False
+	if 'pjson' in request.args:
+		pjson = True
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _admin != password:
@@ -118,10 +110,10 @@ def admin_delete(password=None, variable=None):
 
 @app.route('/admin/purge/<password>')
 def admin_purge(password=None):
-	pjson = True
+	pjson = False
 	_secret = None
-	if 'json' in request.args:
-		pjson = False
+	if 'pjson' in request.args:
+		pjson = True
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _admin != password:
@@ -138,7 +130,7 @@ def admin_purge(password=None):
 			return return_json({"response": "OK"}, pjson)
 	return return_json({"response": "EMPTY"}, pjson)
 
-def return_json(data, pjson, sortkeys=True):
+def return_json(data, pjson=False, sortkeys=True):
 	if pjson:
 		return flask.Response(response=json.dumps(data, sort_keys=sortkeys, indent=4, separators=(',', ': ')), status=200, mimetype='application/json')
 	else:
