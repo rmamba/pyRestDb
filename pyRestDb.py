@@ -11,6 +11,8 @@ import sys
 import asyncore
 import json
 
+#Raspian(rPi): sudo apt-get install python-flask
+#OpenSuse: zypper install python-flask
 import flask
 from flask import Flask
 from flask import request
@@ -172,7 +174,7 @@ if __name__ == '__main__':
 				_host = tmp[1]
 			if arg.startswith('--port='):
 				tmp = arg.split('=')
-				_port = tmp[1]
+				_port = int(tmp[1])
 			if arg.startswith('--admin='):
 				tmp = arg.split('=')
 				_admin = tmp[1]
