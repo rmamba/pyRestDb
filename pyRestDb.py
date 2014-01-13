@@ -28,6 +28,8 @@ def index():
 
 @app.route('/static/<path:file>')
 def file(file=None):
+	if file=='favicon.ico':
+		file = 'rmamba.jpg'
 	return send_from_directory(app.static_folder, filename)
 
 @app.route('/get')
