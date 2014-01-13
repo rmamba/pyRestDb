@@ -3,14 +3,14 @@
 	<head>
 		<meta charset='utf-8' />
 		<meta http-equiv="X-UA-Compatible" content="chrome=1" />
-		<meta name="description" content="jQuery JSONView : Pretty JSON on your web - port of the Firefox extension." />
-
-		<link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-		<link rel="stylesheet" href="stylesheets/jquery.jsonview.css" />
+		<meta name="description" content="Python RestDB : pyRestDB - Python in memory database with REST interface." />
+		<link rel="icon" type="image/jpeg" href="static/rmamba.jpg" />
+		<link rel="stylesheet" type="text/css" media="screen" href="static/stylesheet.css">
+		<link rel="stylesheet" href="static/jquery.jsonview.css" />
 		<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
-		<script type="text/javascript" src="javascripts/jquery.jsonview.js"></script>
+		<script type="text/javascript" src="static/jquery.jsonview.js"></script>
 		<script type="text/javascript">
-			var data = '{{ data }}';
+			var data = {{ data|tojson|safe }};
 			$(function() {
 				$("#data").JSONView(data);
 			});
@@ -24,8 +24,8 @@
 			<header class="inner">
 				<a id="forkme_banner" href="https://github.com/rmamba/pyRestDb">View on GitHub</a>
 
-				<h1 id="project_title">jQuery JSONView</h1>
-				<h2 id="project_tagline">Pretty JSON on your web - port of the Firefox extension.</h2>
+				<h1 id="project_title">Python RestDB</h1>
+				<h2 id="project_tagline">Store data in memory database via REST interface.</h2>
 
 				<section id="downloads">
 					<a class="zip_download_link" href="https://github.com/rmamba/pyRestDb/zipball/master">Download this project as a .zip file</a>
@@ -37,40 +37,41 @@
 		<!-- MAIN CONTENT -->
 		<div id="main_content_wrap" class="outer">
 			<section id="main_content" class="inner">
-				<h1>jQuery JSONView</h1>
+				<h1>Python RestDB</h1>
+				<p>Created for RaspberryPI to store NMEA GPS parsed locations in memory instead of writing them constantly to SD card.</p>
 
-				<p>
-					Formats &amp; syntax highlights JSON.
-				</p>
-
-				<p>
-					Port of Ben Hollis's JSONView extension for Firefox: <a href="http://jsonview.com">http://jsonview.com</a>
-				</p>
-
-				<h2>Usage</h2>
-
-				<div class="highlight">
-					<pre><span class="c1">// View a json format string</span>
-		<span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="s1">'{"hey": "guy","anumber": 243,"anobject": {"whoa": "nuts","anarray": [1,2,"thr&lt;h1&gt;ee"], "more":"stuff"},"awesome": true,"bogus": false,"meaning": null, "japanese":"明日がある。", "link": "http://jsonview.com", "notLink": "http://jsonview.com is great"}'</span><span class="p">;</span>
-		
-		<span class="c1">// Or view a object</span>
-		<span class="c1">// var data = {"hey": "guy","anumber": 243,"anobject": {"whoa": "nuts","anarray": [1,2,"thr&lt;h1&gt;ee"], "more":"stuff"},"awesome": true,"bogus": false,"meaning": null, "japanese":"明日がある。", "link": "http://jsonview.com", "notLink": "http://jsonview.com is great"};</span>
-		
-		<span class="nx">$</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-		  <span class="nx">$</span><span class="p">(</span><span class="s2">"#data"</span><span class="p">).</span><span class="nx">JSONView</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
-		<span class="p">});</span>
-		</pre>
-</div>
-				<p>
-					<strong>Output:</strong>
-				</p>
+				<h2>Stored data</h2>			
 				<div id="data"></div>
+				
+				<p>
+					<strong>Usage:</strong>
+				</p>
+				<div>
+					<p>All links return data in JSON format</p>					
+					<p>Store NUMBER value: /set/{variable}/{number}</p>
+					<p>Store STRING value: /set/{variable}/{string}</p>
+					<p>Store complex values with POST (can be JSON data): /post/{variable}</p>
+					<p>Get value: /get/{variable}</p>
+					
+					<p>Store hidden NUMBER varlue: /set/{variable}/{value}?secret={HASH}</p>
+					<p>Store hidden STRING varlue: /set/{variable}/{value}?secret={HASH}</p>
+					<p>Get hidden value: /get/{variable}?secret={HASH}</p>
+				</div>
+				
+				<p>
+					<strong>Admin Usage:</strong>
+				</p>
+				<div>
+					<p>All links return data in JSON format</p>
+					<p>Show hidden data: /admin/{password}</p>
+					<p>Delete value: /admin/delete/{password}/{variable}</p>
+					<p>Delete hidden value: /admin/delete/{password}/{variable}?secret={HASH}</p>
+					<p>Purge all values: /admin/purge/{password}</p>
+					<p>Purge only hidden values: /admin/purge/{password}?secret={HASH}</p>
+				</div>
 
 				<h2>Licence</h2>
-
-				<p>
-					MIT
-				</p>
+				<p>MIT</p>
 			</section>
 		</div>
 
@@ -78,7 +79,7 @@
 		<div id="footer_wrap" class="outer">
 			<footer class="inner">
 				<p class="copyright">
-					jQuery JSONView maintained by <a href="https://github.com/yesmeck">yesmeck</a>
+					Python RestDB maintained by <a href="https://github.com/rmamba">rmamba</a>
 				</p>
 				<p>
 					Published with <a href="http://pages.github.com">GitHub Pages</a>

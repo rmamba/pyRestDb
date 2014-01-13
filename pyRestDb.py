@@ -10,12 +10,12 @@ Created on 18 Dec 2013
 import sys
 import asyncore
 import json
+import time
 
 #RaspberryPi: sudo apt-get install python-flask
 #OpenSuse: zypper install python-flask
 import flask
-from flask import Flask
-from flask import request
+from flask import Flask, request, render_template
 app = Flask(__name__, static_folder='static')
 data = { }
 secret = { }
@@ -24,13 +24,13 @@ _admin = 'password'
 @app.route('/')
 @app.route('/index.html')
 def index():
-	pjson = json.dumps(data, sort_keys=sortkeys, indent=4, separators=(',', ': '))
-	return render_template('index.html', data=pjson)
+	return render_template('index.html', data=data)
 
 @app.route('/static/<path:file>')
 def file(file=None):
 	return send_from_directory(app.static_folder, filename)
 
+@app.route('/get')
 @app.route('/get/<path:variable>')
 def show_value(variable=None):
 	pjson = False
@@ -41,18 +41,7 @@ def show_value(variable=None):
 		_secret = request.args['secret']
 	if _secret == None:
 		val = data
-		path = variable.split('/')
-		for p in path:
-			if p in val:
-				val = val[p]
-			else:
-				val = None
-				break
-		if val!=None:
-			return return_json(val, pjson)
-	else:
-		if _secret in secret:
-			val = secret[_secret]
+		if variable!=None:
 			path = variable.split('/')
 			for p in path:
 				if p in val:
@@ -60,6 +49,19 @@ def show_value(variable=None):
 				else:
 					val = None
 					break
+		if val!=None:
+			return return_json(val, pjson)
+	else:
+		if _secret in secret:
+			val = secret[_secret]
+			if variable!=None:
+				path = variable.split('/')
+				for p in path:
+					if p in val:
+						val = val[p]
+					else:
+						val = None
+						break
 			if val!=None:
 				return return_json(val, pjson)
 	return return_json({"response": "EMPTY"}, pjson)
@@ -102,11 +104,13 @@ def admin(password=None):
 	if 'pjson' in request.args:
 		pjson = True
 	if _admin != password:
-		#time.sleep(.1)
+		time.sleep(5)
 		return return_json({"error": "Wrong password!"}, pjson)
-	return return_json({ "public": data, "secret": secret }, pjson)
+		#return render_template('index.html', data=data)
+	#return return_json({ "public": data, "secret": secret }, pjson)
+	return render_template('index.html', data={ "public": data, "secret": secret })
 
-@app.route('/admin/delete/<password>/<variabla>')
+@app.route('/admin/delete/<password>/<variable>')
 def admin_delete(password=None, variable=None):
 	pjson = False
 	_secret = None
@@ -115,7 +119,7 @@ def admin_delete(password=None, variable=None):
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _admin != password:
-		time.sleep(1)
+		time.sleep(5)
 		return return_json({"error": "Wrong password!"}, pjson)
 	
 	if _secret == None:
@@ -138,7 +142,7 @@ def admin_purge(password=None):
 	if 'secret' in request.args:
 		_secret = request.args['secret']
 	if _admin != password:
-		time.sleep(1)
+		time.sleep(5)
 		return return_json({"error": "Wrong password!"}, pjson)
 	
 	if _secret == None:
