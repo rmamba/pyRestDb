@@ -11,22 +11,27 @@ import sys
 import asyncore
 import json
 
+#RaspberryPi: sudo apt-get install python-flask
+#OpenSuse: zypper install python-flask
 import flask
 from flask import Flask
 from flask import request
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 data = { }
 secret = { }
 _admin = 'password'
 
 @app.route('/')
-def list_variable():
-	pjson = False
-	if 'pjson' in request.args:
-		pjson = True
-	return return_json(data, pjson)
+@app.route('/index.html')
+def index():
+	pjson = json.dumps(data, sort_keys=sortkeys, indent=4, separators=(',', ': '))
+	return render_template('index.html', data=pjson)
 
-@app.route('/<path:variable>')
+@app.route('/static/<path:file>')
+def file(file=None):
+	return send_from_directory(app.static_folder, filename)
+
+@app.route('/get/<path:variable>')
 def show_value(variable=None):
 	pjson = False
 	_secret = None
@@ -172,7 +177,7 @@ if __name__ == '__main__':
 				_host = tmp[1]
 			if arg.startswith('--port='):
 				tmp = arg.split('=')
-				_port = tmp[1]
+				_port = int(tmp[1])
 			if arg.startswith('--admin='):
 				tmp = arg.split('=')
 				_admin = tmp[1]
