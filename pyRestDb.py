@@ -196,9 +196,5 @@ if __name__ == '__main__':
     	f.write(pid)
     	f.close()
 		app.run(host=_host, port=_port)
-		pid = str(os.getpid())
-    		f = open('pyRestDb.pid', 'w')
-    		f.write(pid)
-    		f.close()
 	except Exception,e:
 		print "Error: " + str(e)
