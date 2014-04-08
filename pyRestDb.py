@@ -7,6 +7,7 @@ Created on 18 Dec 2013
 @author: rmamba@gmail.com
 '''
 
+import os
 import sys
 import asyncore
 import json
@@ -14,8 +15,10 @@ import time
 
 #RaspberryPi: sudo apt-get install python-flask
 #OpenSuse: zypper install python-flask
+#Mac OSX: sudo easy_install Flask
 import flask
 from flask import Flask, request, render_template
+
 app = Flask(__name__, static_folder='static')
 data = { }
 secret = { }
@@ -187,7 +190,11 @@ if __name__ == '__main__':
 			if arg.startswith('--admin='):
 				tmp = arg.split('=')
 				_admin = tmp[1]
-	
+
+		pid = str(os.getpid())
+    	f = open('pyRestDb.pid', 'w')
+    	f.write(pid)
+    	f.close()
 		app.run(host=_host, port=_port)
 	except Exception,e:
 		print "Error: " + str(e)
