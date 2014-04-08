@@ -14,8 +14,10 @@ import time
 
 #RaspberryPi: sudo apt-get install python-flask
 #OpenSuse: zypper install python-flask
+#Mac OSX: sudo easy_install Flask
 import flask
 from flask import Flask, request, render_template
+
 app = Flask(__name__, static_folder='static')
 data = { }
 secret = { }
@@ -189,5 +191,9 @@ if __name__ == '__main__':
 				_admin = tmp[1]
 	
 		app.run(host=_host, port=_port)
+		pid = str(os.getpid())
+    		f = open('pyRestDb.pid', 'w')
+    		f.write(pid)
+    		f.close()
 	except Exception,e:
 		print "Error: " + str(e)
