@@ -160,19 +160,19 @@ def admin_purge(password=None):
 			return return_json({"response": "OK"}, pjson)
 	return return_json({"response": "EMPTY"}, pjson)
 
-def return_json(data, pjson=False, sortkeys=True):
+def return_json(data, pjson=False, sortkeys=True, code=200):
 	if pjson:
-		return flask.Response(response=json.dumps(data, sort_keys=sortkeys, indent=4, separators=(',', ': ')), status=200, mimetype='application/json')
+		return flask.Response(response=json.dumps(data, sort_keys=sortkeys, indent=4, separators=(',', ': ')), status=code, mimetype='application/json')
 	else:
-		return flask.Response(response=json.dumps(data, sort_keys=sortkeys), status=200, mimetype='application/json')
+		return flask.Response(response=json.dumps(data, sort_keys=sortkeys), status=code, mimetype='application/json')
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return flask.jsonify(error=404, text=e), 404
+    return return_json({'error': 'Page not Found!!!'}, False, True, 404)
    
 @app.errorhandler(500)
 def internal_error(e):
-    return flask.jsonify(error=500, text=e), 500
+    return return_json({'error': 'Internal server Error!!!'}, False, True, 500)
 
 if __name__ == '__main__':
 	_host = '0.0.0.0'
@@ -192,9 +192,9 @@ if __name__ == '__main__':
 				_admin = tmp[1]
 
 		pid = str(os.getpid())
-    	f = open('pyRestDb.pid', 'w')
-    	f.write(pid)
-    	f.close()
+    		f = open('pyRestDb.pid', 'w')
+    		f.write(pid)
+    		f.close()
 		app.run(host=_host, port=_port)
 	except Exception,e:
 		print "Error: " + str(e)
