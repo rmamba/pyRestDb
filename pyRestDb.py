@@ -192,7 +192,7 @@ if __name__ == '__main__':
 				_admin = tmp[1]
 
 		pid = str(os.getpid())
-    		f = open('pyRestDb.pid', 'w')
+    		f = open('/var/log/pyRestDb.pid', 'w')
     		f.write(pid)
     		f.close()
 		app.run(host=_host, port=_port)
