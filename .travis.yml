@@ -26,6 +26,7 @@ matrix:
 install:
   - pip install Flask
   - pip install Flask-Testing
+  - pip install urllib2
 script:
   - python tests.py
 notifications:

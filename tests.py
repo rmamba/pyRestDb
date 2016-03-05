@@ -1,7 +1,13 @@
 import unittest
 import urllib
-import urllib2
-from flask import Flask
+
+try:
+    # For Python 3.0 and later
+    from urllib.request import urlopen
+except ImportError:
+    # Fall back to Python 2's urllib2
+    from urllib2 import urlopen
+
 from flask.ext.testing import LiveServerTestCase
 import pyRestDb
 
@@ -15,12 +21,12 @@ class testServerTestCase(LiveServerTestCase):
     def urlTest(self, url, response, encode=True):
         if encode:
             url = urllib.quote(url)
-        res = urllib2.urlopen(self.get_server_url()+url)
+        res = urlopen(self.get_server_url()+url)
         self.assertEqual(res.read(), response)
         self.assertEqual(res.code, 200)
 
     def test_server_is_up_and_running(self):
-        res = urllib2.urlopen(self.get_server_url())
+        res = urlopen(self.get_server_url())
         self.assertEqual(res.code, 200)
 
     def test_numbers_value(self):
