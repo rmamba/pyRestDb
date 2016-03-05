@@ -40,6 +40,7 @@ def file(file=None):
 
 @app.route('/get')
 @app.route('/get/<path:variable>')
+@app.route('/get/<path:variable>/')
 def show_value(variable=None):
     pjson = False
     _secret = None
@@ -93,6 +94,7 @@ def set_value_post(variable=None):
     return return_json({"response": "OK"})
 
 @app.route('/set/<variable>/<value>')
+@app.route('/set/<variable>/<value>/')
 def set_string_value(variable=None, value=None):
     if not isinstance(value, numbers.Number):
         if value[0] != '"' and value[0] != '{':

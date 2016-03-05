@@ -46,8 +46,13 @@ class testServerTestCase(LiveServerTestCase):
     def test_JSON_value(self):
         self.urlTest('/set/testJSON/{"jsonNum":3.14,"jsonStr":"pi"}', '{"response": "OK"}')
         self.urlTest('/get/testJSON', '{"jsonNum": 3.14, "jsonStr": "pi"}')
-        self.urlTest('/get/testJSON?pjson', '{"jsonNum": 3.14, "jsonStr": "pi"}')
-        self.urlTest('/get/testJSON/?pjson', '{"jsonNum": 3.14, "jsonStr": "pi"}')
+        self.urlTest('/get/testJSON/', '{"jsonNum": 3.14, "jsonStr": "pi"}')
+        self.urlTest('/get/testJSON/jsonNum', '3.14')
+        self.urlTest('/get/testJSON/jsonNum/', '3.14')
+        self.urlTest('/get/testJSON/jsonStr', '"pi"')
+        self.urlTest('/get/testJSON/jsonStr/', '"pi"')
+        self.urlTest('/get/testJSON?pjson', '{\n    "jsonNum": 3.14,\n    "jsonStr": "pi"\n}', False)
+        self.urlTest('/get/testJSON/?pjson', '{\n    "jsonNum": 3.14,\n    "jsonStr": "pi"\n}', False)
 
 if __name__ == '__main__':
     unittest.main()
