@@ -218,7 +218,6 @@ if __name__ == '__main__':
             if arg.startswith('--admin='):
                 tmp = arg.split('=')
                 _admin = tmp[1]
-
         app.run(host=_host, port=_port)
-    except Exception, e:
-        print "Error: " + str(e)
+    except Exception as e:
+        print("Error: " + str(e))
