@@ -27,7 +27,7 @@ install:
   - pip install Flask
   - pip install Flask-Testing
 script:
-  - python test.py
+  - python tests.py
 notifications:
   email:
     - rmamba@gmail.com
