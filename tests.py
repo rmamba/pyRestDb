@@ -1,12 +1,14 @@
 import unittest
-import urllib
+# import urllib
 
 try:
     # For Python 3.0 and later
     from urllib.request import urlopen
+    from urllib.parse import quote
 except ImportError:
     # Fall back to Python 2's urllib2
-    from urllib2 import urlopen
+    from urllib import urlopen
+    from urllib import quote
 
 from flask.ext.testing import LiveServerTestCase
 import pyRestDb
@@ -20,7 +22,7 @@ class testServerTestCase(LiveServerTestCase):
 
     def urlTest(self, url, response, encode=True):
         if encode:
-            url = urllib.quote(url)
+            url = quote(url)
         res = urlopen(self.get_server_url()+url)
         self.assertEqual(res.read(), response)
         self.assertEqual(res.code, 200)
